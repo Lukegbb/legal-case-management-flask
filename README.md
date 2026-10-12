@@ -1,54 +1,57 @@
-# Legal Case Management System
+# Legal Case Management
 
-This project is a legal case management system developed with Flask and SQLite for data storage. It allows lawyers and legal professionals to add, view, and manage information about legal cases.
+![CI](https://github.com/Lukegbb/legal-case-management-flask/actions/workflows/ci.yml/badge.svg)
+
+A web app for a small law office to keep track of its cases: who the client is, which lawyer is responsible, the case status, and how long each case has been open. It's built with **Python, Flask and SQLite**.
+
+![Case list](docs/cases.png)
 
 ## Features
 
-- Add Legal Cases Register new cases with information such as case number, client, status, responsible lawyer, and description.
-- Case Listing Displays all registered cases in a table.
-- Reports Generates summary reports with case details filtered by status or lawyer.
+- Add, edit and delete cases, with confirmation before deleting
+- Validation: required fields, unique case number, valid opening date (not in the future)
+- Search by number, client or description, and filter by status or lawyer
+- Colour-coded status badges (Open, In progress, Awaiting hearing, Closed)
+- Report page: totals, active cases, the oldest active case, and counts by status and by lawyer
+- CSV export of the current list (filters are applied)
+- The same report from the command line: `python reports.py`
+- 12 unit and integration tests on GitHub Actions
 
-## Technologies Used
+![Report](docs/report.png)
 
-- Python 3.6+
-- Flask Web framework for Python.
-- SQLite Lightweight database for data storage.
-- HTMLCSS For the user interface.
+## How it's organised
 
-# Create and activate the virtual environment
-python3 -m venv venv
+| File | What it does |
+|---|---|
+| `app.py` | Flask routes (app factory, so tests can use a temporary database) |
+| `models.py` | `Case` dataclass and form validation |
+| `database.py` | `CaseRepository`: all SQL, using parameterised queries |
+| `reports.py` | Summary figures and CSV export |
+| `templates/` | Jinja templates, with one form partial for both add and edit |
 
-# Linux/macOS
-source venv/bin/activate
+## Running locally
 
-# Windows
-# venv\Scripts\activate
-
-# Install the dependencies
+```bash
+python -m venv .venv
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+python app.py                  # http://127.0.0.1:5000
+```
 
-# Set up the database
-python database.py
+| Variable | Default |
+|---|---|
+| `DATABASE` | `cases.db` (created automatically) |
+| `SECRET_KEY` | dev value, so set a real one in production |
+| `FLASK_DEBUG` | off; set to `1` for debug mode |
 
-# Run the Flask server
-python app.py
+## Tests
 
-# Open the browser at the local address
-# Open http://127.0.0.1:5000 to access the application
+```bash
+python -m unittest discover -s tests -t . -v
+```
 
+## Ideas for next steps
 
-## Project Structure
-
-```plaintext
-Legal_Case_Management
-│
-├── app.py               # Main Flask file
-├── models.py            # Data models for legal cases
-├── database.py          # Functions for interacting with the SQLite database
-├── templates           # Directory for HTML files
-│   ├── base.html        # Base layout for the application
-│   ├── index.html       # Main page with form and case listing
-│   └── report.html      # Reports page
-├── static              # Directory for CSS 
-│   └── style.css        # Custom CSS file for styling the interface
-├── requirements.txt     # List of dependencies
+- User login with roles (partner and associate)
+- Deadlines and hearing dates with reminders
+- Upload documents to a case
