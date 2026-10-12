@@ -39,6 +39,9 @@ label {
 }
 
 input[type="text"],
+input[type="date"],
+input[type="search"],
+select,
 textarea {
     width: 100%;
     padding: 0.5em;
@@ -79,3 +82,43 @@ th, td {
 thead {
     background-color: #f4f4f4;
 }
+
+input, select, textarea { box-sizing: border-box; font: inherit; }
+main { max-width: 1100px; margin: 0 auto; }
+footer { text-align: center; color: #777; padding: 1em; }
+
+.card { background: #fff; padding: 1em; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-bottom: 1em; }
+details.card summary { cursor: pointer; font-weight: bold; }
+details.card form { box-shadow: none; padding: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 1em; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; box-shadow: none; background: none; padding: 0; }
+.filters input, .filters select { width: auto; margin: 0; }
+.filters input[type="search"] { flex: 1; min-width: 220px; }
+.filters button { margin-top: 0; }
+.button-link { padding: 0.5em 1em; border: 1px solid #007bff; border-radius: 4px; color: #007bff; text-decoration: none; }
+
+.table-wrap { overflow-x: auto; }
+tbody tr:nth-child(even) { background: #fafafa; }
+.actions { white-space: nowrap; }
+.actions form { display: inline; padding: 0; box-shadow: none; background: none; }
+.link-danger { background: none; color: #c0392b; padding: 0 0 0 0.5em; margin: 0; }
+.link-danger:hover { background: none; text-decoration: underline; }
+
+.badge { padding: 0.15em 0.6em; border-radius: 999px; font-size: 0.85em; background: #e9ecef; }
+.badge-open { background: #d1ecf1; }
+.badge-in-progress { background: #fff3cd; }
+.badge-awaiting-hearing { background: #f8d7da; }
+.badge-closed { background: #d4edda; }
+
+.flash { padding: 0.75em 1em; border-radius: 4px; margin-bottom: 1em; }
+.flash-success { background: #d4edda; color: #155724; }
+.flash-error { background: #f8d7da; color: #721c24; }
+.empty { color: #777; }
+
+.stats { display: flex; flex-wrap: wrap; gap: 1em; margin-bottom: 1em; }
+.stat { background: #fff; padding: 1em 1.5em; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+.stat strong { display: block; font-size: 1.6em; }
+.stat span { color: #666; }
+.bar-cell { width: 50%; }
+.bar { display: block; height: 0.8em; background: #007bff; border-radius: 4px; }
