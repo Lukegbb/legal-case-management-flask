@@ -1,0 +1,28 @@
+<div class="grid">
+    <div>
+        <label for="number">Case number</label>
+        <input type="text" id="number" name="number" value="{{ form.get('number', '') }}" required>
+    </div>
+    <div>
+        <label for="client">Client</label>
+        <input type="text" id="client" name="client" value="{{ form.get('client', '') }}" required>
+    </div>
+    <div>
+        <label for="opened_on">Opened on</label>
+        <input type="date" id="opened_on" name="opened_on" max="{{ today }}" value="{{ form.get('opened_on', '') }}" required>
+    </div>
+    <div>
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            {% for s in statuses %}
+                <option value="{{ s }}" {% if form.get('status') == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="lawyer">Responsible lawyer</label>
+        <input type="text" id="lawyer" name="lawyer" value="{{ form.get('lawyer', '') }}" required>
+    </div>
+</div>
+<label for="description">Description</label>
+<textarea id="description" name="description" rows="3">{{ form.get('description', '') or '' }}</textarea>

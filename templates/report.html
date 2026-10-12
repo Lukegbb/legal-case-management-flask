@@ -1,25 +1,40 @@
 {% extends "base.html" %}
 
+{% block title %}Report{% endblock %}
+
 {% block content %}
-    <h2>Relatório de Casos Jurídicos</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Número</th>
-                <th>Cliente</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for caso in casos %}
+    <h2>Case report</h2>
+    <div class="stats">
+        <div class="stat"><strong>{{ summary.total }}</strong><span>Total cases</span></div>
+        <div class="stat"><strong>{{ summary.active }}</strong><span>Active</span></div>
+        {% if summary.oldest_active %}
+        <div class="stat"><strong>{{ summary.oldest_active.days_open }} days</strong>
+            <span>Oldest active: {{ summary.oldest_active.number }}</span></div>
+        {% endif %}
+    </div>
+
+    <div class="grid">
+        <section class="card">
+            <h3>By status</h3>
+            <table>
+                {% for status, count in summary.by_status.items() %}
                 <tr>
-                    <td>{{ caso[0] }}</td>
-                    <td>{{ caso[1] }}</td>
-                    <td>{{ caso[2] }}</td>
-                    <td>{{ caso[4] }}</td>
+                    <td>{{ status }}</td>
+                    <td class="bar-cell"><span class="bar" style="width: {{ (count / summary.total * 100) if summary.total else 0 }}%"></span></td>
+                    <td>{{ count }}</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
+            </table>
+        </section>
+        <section class="card">
+            <h3>By lawyer</h3>
+            <table>
+                {% for lawyer, count in summary.by_lawyer.items() %}
+                <tr><td>{{ lawyer }}</td><td>{{ count }}</td></tr>
+                {% else %}
+                <tr><td>No cases yet.</td></tr>
+                {% endfor %}
+            </table>
+        </section>
+    </div>
 {% endblock %}

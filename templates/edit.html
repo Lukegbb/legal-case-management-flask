@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Edit case {{ case.number }}{% endblock %}
+
+{% block content %}
+    <h2>Edit case {{ case.number }}</h2>
+    <form method="post" class="card">
+        {% include "_case_form.html" %}
+        <button type="submit">Save changes</button>
+        <a href="{{ url_for('index') }}">Cancel</a>
+    </form>
+{% endblock %}

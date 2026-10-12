@@ -1,54 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Adicionar Novo Caso</h2>
-    <form action="{{ url_for('adicionar') }}" method="post">
-        <label for="numero">Número do Caso:</label>
-        <input type="text" id="numero" name="numero" required>
-        
-        <label for="cliente">Nome do Cliente:</label>
-        <input type="text" id="cliente" name="cliente" required>
-        
-        <label for="data_abertura">Data de Abertura (dd/mm/aaaa):</label>
-        <input type="text" id="data_abertura" name="data_abertura" required>
-        
-        <label for="status">Status:</label>
-        <input type="text" id="status" name="status" required>
-        
-        <label for="descricao">Descrição:</label>
-        <textarea id="descricao" name="descricao"></textarea>
-        
-        <label for="advogado">Advogado Responsável:</label>
-        <input type="text" id="advogado" name="advogado" required>
-        
-        <button type="submit">Adicionar Caso</button>
+    <details class="card" {% if form %}open{% endif %}>
+        <summary>Add a new case</summary>
+        <form action="{{ url_for('add_case') }}" method="post">
+            {% include "_case_form.html" %}
+            <button type="submit">Add case</button>
+        </form>
+    </details>
+
+    <form class="filters" method="get" action="{{ url_for('index') }}">
+        <input type="search" name="q" placeholder="Search number, client or description" value="{{ filters.get('q', '') }}">
+        <select name="status">
+            <option value="">All statuses</option>
+            {% for s in statuses %}<option {% if filters.get('status') == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+        </select>
+        <select name="lawyer">
+            <option value="">All lawyers</option>
+            {% for l in lawyers %}<option {% if filters.get('lawyer') == l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+        <a class="button-link" href="{{ url_for('export_csv', **filters) }}">Export CSV</a>
     </form>
-    
-    <h2>Casos Cadastrados</h2>
+
+    <h2>Cases ({{ cases|length }})</h2>
+    {% if cases %}
+    <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Número</th>
-                <th>Cliente</th>
-                <th>Data de Abertura</th>
-                <th>Status</th>
-                <th>Descrição</th>
-                <th>Advogado</th>
-            </tr>
+            <tr><th>Number</th><th>Client</th><th>Opened</th><th>Status</th><th>Lawyer</th><th>Description</th><th></th></tr>
         </thead>
         <tbody>
-            {% for caso in casos %}
-                <tr>
-                    <td>{{ caso[0] }}</td>
-                    <td>{{ caso[1] }}</td>
-                    <td>{{ caso[2] }}</td>
-                    <td>{{ caso[3] }}</td>
-                    <td>{{ caso[4] }}</td>
-                    <td>{{ caso[5] }}</td>
-                    <td>{{ caso[6] }}</td>
-                </tr>
+            {% for case in cases %}
+            <tr>
+                <td>{{ case.number }}</td>
+                <td>{{ case.client }}</td>
+                <td>{{ case.opened_on }}</td>
+                <td><span class="badge badge-{{ case.status|lower|replace(' ', '-') }}">{{ case.status }}</span></td>
+                <td>{{ case.lawyer }}</td>
+                <td>{{ case.description }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('edit_case', case_id=case.id) }}">Edit</a>
+                    <form method="post" action="{{ url_for('delete_case', case_id=case.id) }}"
+                          onsubmit="return confirm('Delete case {{ case.number }}?');">
+                        <button type="submit" class="link-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
+    {% else %}
+        <p class="empty">No cases found.</p>
+    {% endif %}
 {% endblock %}
